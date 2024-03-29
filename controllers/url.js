@@ -3,16 +3,19 @@ import URL from '../models/url.js';
 
 export const handleGenerateShortURL = async (req, res) => {
   const body = req.body;
-  if(!body) return res.status(400).json({ error: 'URL is req...' })
+  if(!body.originalURL) return res.status(400).json({ error: 'URL is req...' })
 
   const shortId = nanoid(8);
   await URL.create({
     shortId: shortId,
-    redirectURL: body.url,
+    redirectURL: body.originalURL,
     visitHistory: [],
   })
 
-  return res.status(201).json({ status: 'success', id: shortId })
+  return res.render('home', {
+    id: shortId,
+  })
+  // return res.status(201).json({ status: 'success', id: shortId })
 }
 
 export const handleRedirectShortURL = async (req, res) => {
